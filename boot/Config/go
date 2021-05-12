@@ -1,0 +1,38 @@
+#!/bin/bash
+
+REMOTE_USER=smbuser
+REMOTE_PASS=smbpassword
+REMOTE_IP=192.168.1.99 #Update to your remote IP Address
+REMOTE_SHARE=somesharedirectory
+FILENAME=file.key #use an image or something, but make sure it is backed up
+
+
+
+# auto unlock array
+echo "create event folders"
+mkdir -p /usr/local/emhttp/webGui/event/starting
+mkdir -p /usr/local/emhttp/webGui/event/started
+mkdir -p /usr/local/emhttp/webGui/event/stopped
+
+echo "Copy scripts to events folders"
+cp -f /boot/Other/bin/fetch_key /usr/local/emhttp/webGui/event/starting
+cp -f /boot/Other/bin/delete_key /usr/local/emhttp/webGui/event/started
+cp -f /boot/Other/bin/fetch_key /usr/local/emhttp/webGui/event/stopped
+
+#Mark scripts as executable
+chmod +x /usr/local/emhttp/webGui/event/starting/fetch_key
+chmod +x /usr/local/emhttp/webGui/event/started/delete_key
+
+# Start the Management Utility
+/usr/local/sbin/emhttp &
+
+#add plex igpu transcoding
+# modprobe i915
+# chmod -R 777 /dev/dri
+
+#enable qemu guest agent
+#Used for proxmox
+#/usr/bin/qemu-ga -d
+
+#copy tmux config
+cp /boot/Other/bin/tmux.conf /root/.tmux.conf
